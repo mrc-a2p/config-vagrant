@@ -1,56 +1,62 @@
+# -*- mode= ruby -*-
+# vi: set ft=ruby :
+
 #configuraciones basicas 
 VERSION_VANGRANT = "2" 
 
-NAME_BOX = "bento/ubuntu-16.04"
+NAME_BOX = "ubuntu/xenial32"
 #configuracione de la network
-HOST_NAME="marc.local"
+HOST_NAME="red.local"
 GUEST = "80"
 HOST = "8080"
-PRIVATE_NET= "192.168.33.10"
 PRIVATE_NET_BOX= "192.168.33.101"
 
 
 
 #Siempre poner vagrant para iniciar y luego la version, pasamos las configuraciones de la box
 Vagrant.configure(VERSION_VANGRANT) do |config|
-    #Pasamos la imagen de la ISO que usaremos "ubuntu"
-    config.vm.box = NAME_BOX
-    #Pasanos el dominio(nombre)
-    config.vm.hostname = HOST_NAME
 
-    #configuramos los puertos !NOTA: Esto permitirá el acceso público al puerto abierto
-    config.vm.network "forwarded_port", guest: GUEST, host: HOST
-    # Cree una red privada, que permita el acceso de solo host a la máquina
-    config.vm.network "private_network", ip: PRIVATE_NET
-    #habilitar wifi 
-    # config.vm.network "public_network", bridge: "en1: Wi-Fi (AirPort)"
-
-    # Investiar mas 
-    # Configuraciones de carpeta
-    #config.vm.synced_folder LOCAL, VIRTUAL, 
-    #:owner => "vagrant",
-    #:group => "vagrant",
-    #:mount_options => ["dmode=775,fmode=775"]
-
+    ##
+    # BOXRED1
+    ##
     
-    #donde copiar archivos "carpeta publica"
-    config.vm.synced_folder "./", "/var/www", create: true, group: "www-data", owner: "www-data"
+    config.vm.define "br1" do |br1|
+      br1.vm.box = NAME_BOX
+      br1.gui = false
+      br1.name = "boxred1.box"
+      br1.memory = 1024
+      br1.cpus = 1
+      br1.vm.network "private_network", ip: PRIVATE_NET_BOX
+
+      # br1.vm.provision :shell, path: "conf/bootstrap-red.sh"
+      br1.vm.provision :shell, inline: <<-SHELL
+      sudo apt-get update
+      sudo apt-get -y upgrade
+      SHELL
+
+    end
 
 
     ##
-    #configuraciones de tu box 
+    # BOXRED2
     ##
-    # aqui instalamos todas las dependencias para el proyecto(programas)
-    # config.vm.provision :shell, path: "conf/bootstrap-red.sh"
-    config.vm.provision :shell, path: "conf/bootstrap-red.sh"
-
-
-
-    config.vm.provider "virtualbox" do |vb|
-      #vb.gui = false
-      vb.name = "marc-image.box"
-      vb.memory = 1024
-      vb.cpus = 1
+    config.vm.provider "br2" do |br2|
+    file_to_disk = 'tmp/disk.vdi'
+    unless File.exist?(file_to_disk)
+      br2.customize [
+                    'createhd',
+                    '--filename', file_to_disk,
+                    '--size', 500 * 1024
+                    ]
+    end
+    br2.customize [
+                  'storageattach', :id,
+                  '--storagectl', 'SATAController',
+                  '--port', 1,
+                  '--device', 0,
+                  '--type', 'hdd',
+                  '--medium', file_to_disk
+                  ]
     end
     
   end

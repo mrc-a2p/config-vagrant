@@ -1,0 +1,22 @@
+#Siempre poner vagrant para iniciar y luego la version, pasamos las configuraciones de la box
+Vagrant.configure("2") do |config|
+    #Pasamos la imagen de la ISO que usaremos "ubuntu"
+    config.vm.box = "bento/ubuntu-16.04"
+    #configuramos los puertos 
+    config.vm.network "forwarded_port", guest: 80, host: 80
+  
+    #donde copiar archivos "carpeta publica"
+    config.vm.synced_folder "./", "/var/www", create: true, group: "www-data", owner: "www-data"
+
+    #configuraciones de tu box 
+    config.vm.provider "virtualbox" do |vb|
+      vb.name = "marc-box.box"
+      vb.memory = 1024
+    end
+
+    #config.vm.provision "shell" do |s|#
+    #   s.path = "./conf/nginx/bootstrap-nginx.sh"
+    #  s.path = "./conf/apache/bootstrap-apache.sh"
+    #end
+    
+  end

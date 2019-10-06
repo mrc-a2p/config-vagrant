@@ -1,0 +1,2 @@
+Arranca una máquina virtual. En el directorio tiene que haber un archivo Vagrantfile (lógicamente)
+    -> vagrant up

@@ -1,22 +1,87 @@
+#configuraciones basicas 
+VERSION_VANGRANT = "2" 
+
+NAME_BOX = "bento/ubuntu-16.04"
+#configuracione de la network
+HOST_NAME="marc.local"
+GUEST = "80"
+HOST = "8080"
+PRIVATE_NET= "192.168.33.10"
+
+
 #Siempre poner vagrant para iniciar y luego la version, pasamos las configuraciones de la box
-Vagrant.configure("2") do |config|
+Vagrant.configure(VERSION_VANGRANT) do |config|
     #Pasamos la imagen de la ISO que usaremos "ubuntu"
-    config.vm.box = "bento/ubuntu-16.04"
-    #configuramos los puertos 
-    config.vm.network "forwarded_port", guest: 80, host: 80
-  
+    config.vm.box = NAME_BOX
+    #Pasanos el dominio(nombre)
+    config.vm.hostname = HOST_NAME
+
+    #configuramos los puertos !NOTA: Esto permitirá el acceso público al puerto abierto
+    config.vm.network "forwarded_port", guest: GUEST, host: HOST
+    # Cree una red privada, que permita el acceso de solo host a la máquina
+    config.vm.network "private_network", ip: PRIVATE_NET
+    #habilitar wifi 
+    # config.vm.network "public_network", bridge: "en1: Wi-Fi (AirPort)"
+
+    # Investiar mas 
+    # Configuraciones de carpeta
+    #config.vm.synced_folder LOCAL, VIRTUAL, 
+    #:owner => "vagrant",
+    #:group => "vagrant",
+    #:mount_options => ["dmode=775,fmode=775"]
+
+    
     #donde copiar archivos "carpeta publica"
     config.vm.synced_folder "./", "/var/www", create: true, group: "www-data", owner: "www-data"
 
+
+    ##
     #configuraciones de tu box 
+    ##
+
+    #configuracion basica
+    # config.vm.provider "virtualbox" do |vb|
+    #   vb.name = "marc-box.box"
+    #   vb.memory = 1024
+    # end
+
+
+    # #
+    # el proveedor que está utilizando para más
+    # config.vm.provision "shell", ruta: "bootstrap.sh"
+    # config.vm.provision :shell, path: "./box-marc/conf/bootstrap-marc.sh"    
+
+    # config.vm.provision "shell" do |vb|
+    #   vb.name = "marc-box.box"
+    #   vb.memory = "1024"
+    #   vb.path = "./box-marc/conf/bootstrap-marc.sh"
+    #   # saludo prueba
+    #   vb.inline = "echo $1"
+    #   vb.args   = "'hello, world!'"
+    # end
+
     config.vm.provider "virtualbox" do |vb|
+      #vb.gui = false
       vb.name = "marc-box.box"
       vb.memory = 1024
     end
-
-    #config.vm.provision "shell" do |s|#
-    #   s.path = "./conf/nginx/bootstrap-nginx.sh"
-    #  s.path = "./conf/apache/bootstrap-apache.sh"
-    #end
     
   end
+
+
+
+
+
+
+
+
+
+  # &&&&
+  #     config.vm.provision "shell" do |vb|
+  #     vb.name = "marc-box.box"
+  #     vb.memory = 1024
+  #     #vb.path = "./box-marc/conf/bootstrap-marc.sh"
+  #     # saludo prueba
+  #     vb.inline = "echo $1"
+  #     vb.args   = "'hello, world!'"
+  #   end

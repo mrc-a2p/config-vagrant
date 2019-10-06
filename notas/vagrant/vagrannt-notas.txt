@@ -1,2 +1,17 @@
+Con este comando creas un archivo Vagrantfile vacío.
+    ->vagrant init
+
 Arranca una máquina virtual. En el directorio tiene que haber un archivo Vagrantfile (lógicamente)
     -> vagrant up
+
+Entrada remota a la imagen creada 
+    -> vagrant ssh
+
+Vuelve a ejecutar tu script(archivo vagrantfile) de arranque (si lo has actualizado) sin tener que crear la máquina virtual desde cero.
+    -> vagrant provision
+
+Resetea la máquina virtual a su estado inicial y vuelve a lanzar el script de arranque.
+     ->vagrant reload
+
+Borra la máquina y el disco virtual creado, aunque conserva el box de inicio.
+    -> vagrant destroy

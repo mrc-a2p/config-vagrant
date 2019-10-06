@@ -4,7 +4,7 @@
 #configuraciones basicas 
 VERSION_VANGRANT = "2" 
 
-NAME_BOX = "ubuntu/xenial32"
+NAME_BOX = "bento/ubuntu-16.04"
 #configuracione de la network
 HOST_NAME="red.local"
 GUEST = "80"
@@ -22,12 +22,16 @@ Vagrant.configure(VERSION_VANGRANT) do |config|
     
     config.vm.define "br1" do |br1|
       br1.vm.box = NAME_BOX
-      br1.gui = false
-      br1.name = "boxred1.box"
-      br1.memory = 1024
-      br1.cpus = 1
       br1.vm.network "private_network", ip: PRIVATE_NET_BOX
 
+      #configuraciones de virtual box
+      br1.vm.provider "virtualbox" do |vb|
+        vb.gui = false
+        vb.name = "boxred1.box"
+        vb.memory = "1024"
+        #vb.cpus = 1
+      end
+      
       # br1.vm.provision :shell, path: "conf/bootstrap-red.sh"
       br1.vm.provision :shell, inline: <<-SHELL
       sudo apt-get update

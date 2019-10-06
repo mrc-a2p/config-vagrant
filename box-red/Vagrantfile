@@ -23,6 +23,8 @@ Vagrant.configure(VERSION_VANGRANT) do |config|
     config.vm.define "br1" do |br1|
       br1.vm.box = NAME_BOX
       br1.vm.network "private_network", ip: PRIVATE_NET_BOX
+      br1.vm.network "forwarded_port", guest: 80, host: 8083
+      br1.vm.network "public_network", bridge: "en1: Wi-Fi (AirPort)"
 
       #configuraciones de virtual box
       br1.vm.provider "virtualbox" do |vb|

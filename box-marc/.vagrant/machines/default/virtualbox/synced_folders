@@ -1,1 +1,0 @@
-{"virtualbox":{"/var/www":{"create":true,"group":"www-data","owner":"www-data","guestpath":"/var/www","hostpath":"/Users/marc/www/vagrant-isos/box-marc","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"/Users/marc/www/vagrant-isos/box-marc","disabled":false,"__vagrantfile":true}}}
